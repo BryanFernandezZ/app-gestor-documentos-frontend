@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.navbar-with-content {
+    display: flex;
+    justify-content: stretch;
+    height: 100vh;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.navbar-content {
+    overflow-y: scroll;
+}
+
+.table-container {
+    overflow-x: scroll;
+}
+
+.texto-coincidencia {
+    background-color: rgb(255, 255, 0);
+}

@@ -1,0 +1,178 @@
+<div class="navbar-with-content">
+    <app-navbar></app-navbar>
+    <!-- style="width: 280px;" -->
+
+    <div class="w-100 navbar-content">
+        <app-contenido-header [titulo]="'Lista de Usuarios'"></app-contenido-header>
+
+        <div class="card m-4 shadow-sm p-3 mb-5 bg-body-tertiary rounded custom-border">
+            <div class="d-flex justify-content-end align-items-center">
+                <a routerLink="/agregar-usuario" type="button" class="btn btn-outline-primary mt-3 me-3">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Agregar Nuevo Usuario</span>
+                </a>
+            </div>
+            <hr />
+
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <div class="d-flex align-items-center gap-1">
+                    <span>Mostrar</span>
+                    <input type="number" class="form-control" value="10" style="width: 70px;" />
+                    <span>Entradas</span>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span>Buscar:</span>
+                    <input type="text" class="form-control" (keyup)="filtrarUsuarios($event)" />
+                </div>
+            </div>
+
+            <div class="w-100 table-container">
+                <table class="table table-bordered table-striped text-uppercase">
+                    <thead class="table-dark">
+                        <tr>
+                            <!-- <th scope="col" class="text-center">#</th> -->
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellidos</th>
+                            <th scope="col">Usuario</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Área</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!loading">
+                            <td colspan="8" class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let usuario of usuariosMostrar$ | async">
+                            <!-- <th scope="row" class="text-center">{{usuario.codigo}}</th> -->
+                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.nombre">{{usuario.nombre}}</td>
+                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.apellidos">
+                                {{usuario.apellidos}}</td>
+                            <td>{{usuario.usuario}}</td>
+                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.rol.rol">
+                                {{usuario.rol.rol}}</td>
+                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.area.area">
+                                {{usuario.area.area}}</td>
+                            <td>{{usuario.active ? "Activo": "Inactivo"}}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a [routerLink]="['/actualizar-usuario', usuario.codigo]" type="button"
+                                        class="me-2 btn btn-outline-primary" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="#ver_usuario_modal" type="button" class="me-2 btn btn-outline-success" title="Ver"
+                                        (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="#alerta_eliminar_usuario" type="button" class="btn btn-outline-danger"
+                                        title="Eliminar" (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <span class="d-block">Mostrando {{usuariosMostrar.length}} entradas</span>
+
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link">Anterior</a>
+                        </li>
+
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="ver_usuario_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detalle del Usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="usuarioSeleccionado" class="container-full">
+                    <div class="row">
+                        <div class="col d-flex justify-content-end">
+                            <img *ngIf="!usuarioSeleccionado.avatar" class="rounded-circle"
+                                src="../assets/img/temporal-profile-picture.jpg" alt="foto del usuario" width="100"
+                                height="100">
+                            <img *ngIf="usuarioSeleccionado.avatar" class="rounded-circle"
+                                [src]="'data:image/jpeg;base64,' + usuarioSeleccionado.avatar" alt="foto del usuario"
+                                width="100" height="100">
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <div class="d-flex flex-column justify-content-center">
+                                <span class="d-block text-truncate" style="max-width: 160px;"
+                                    [title]="usuarioSeleccionado.nombre + ' ' + usuarioSeleccionado.apellidos">{{usuarioSeleccionado.nombre}}
+                                    {{usuarioSeleccionado.apellidos}}</span>
+                                <span class="d-block text-truncate" style="max-width: 160px;"
+                                    [title]="usuarioSeleccionado.correo">{{usuarioSeleccionado.correo}}</span>
+                                <span class="d-block">{{usuarioSeleccionado.telefono}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col d-flex flex-column align-items-end">
+                            <p>{{usuarioSeleccionado.tipoIdentidad.tipoIdentidad}}:</p>
+                            <p>Area:</p>
+                            <p>Usuario:</p>
+                            <p>Rol:</p>
+                        </div>
+                        <div class="col d-flex flex-column align-items-start">
+                            <p>{{usuarioSeleccionado.nroIdentidad}}</p>
+                            <p>{{usuarioSeleccionado.area.area}}</p>
+                            <p>{{usuarioSeleccionado.usuario}}</p>
+                            <p>{{usuarioSeleccionado.rol.rol}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alerta_eliminar_usuario" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de eliminar a este usuario?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="eliminarUsuario()"
+                    data-bs-dismiss="modal">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,183 @@
+<nav class="text-bg-dark nav_custom collapse collapse-horizontal" id="sidebar" [ngClass]="{'show': mostrarSidebar()}">
+    <div class="col" style="width: 260px;">
+        <div class="perfil-container p-3">
+
+            <div *ngIf="!usuarioLogueado?.avatar" class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+
+            <div class="perfil">
+                <img *ngIf="usuarioLogueado?.avatar" class="rounded-circle"
+                    [src]="'data:image/jpeg;base64,' + usuarioLogueado?.avatar" alt="Foto de perfil" width="60"
+                    height="60">
+
+                <div style="width: 180px;">
+                    <p *ngIf="usuarioLogueado?.nombre" class="mb-0 text-truncate"
+                    [title]="usuarioLogueado?.nombre + ' ' + usuarioLogueado?.apellidos">
+                    {{usuarioLogueado?.nombre + ' ' + usuarioLogueado?.apellidos}}</p>
+
+                    <p *ngIf="usuarioLogueado?.rol" class="mb-0">{{usuarioLogueado?.rol.rol}}</p>
+                </div>
+
+            </div>
+
+            <button class="text-white" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar"
+                aria-expanded="true" aria-controls="sidebar"
+                style="font-size: 25px; background: none; border: none; height: 60px;">
+                &#9776;
+            </button>
+
+        </div>
+
+        <hr />
+
+        <ul class="navbar-nav">
+            <li class="nav-item mb-2">
+                <a routerLink="/" class="text-decoration-none p-3 text-white item">
+                    <img src="../assets/icons/dashboard-icon.png" alt="icono de dashboard">
+                    <span class="m-2">Dashboard</span>
+                </a>
+            </li>
+
+            <!-- TODO: SI EL ROL ES DE GESTOR, ENTONCES EL ELEMENTO "USUARIOS" DE LA LISTA DESPLEGABLE NO DEBE SER VISIBLE -->
+
+            <li class="nav-item mb-2" *ngIf="supervisor">
+
+                <a href="#usuario_collapse" class="text-decoration-none p-3 text-white item" data-bs-toggle="collapse"
+                    aria-expanded="false" aria-controls="usuario_collapse">
+                    <img src="../assets/icons/usuarios-icon.png" alt="icono de dashboard">
+                    <span class="m-2">Usuarios</span>
+                </a>
+
+                <div class="collapse mt-2" id="usuario_collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a routerLink="/agregar-usuario" class="item-child ps-4 py-3">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="m-2">Agregar Nuevo</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/lista-usuarios" class="item-child ps-4 py-3">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="m-2">Lista de Usuarios</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item mb-2">
+
+                <a href="#documento_collapse" class="text-decoration-none p-3 text-white item" data-bs-toggle="collapse"
+                    aria-expanded="false" aria-controls="documento_collapse">
+                    <img src="../assets/icons/documentos-icon.png" alt="icono de dashboard">
+                    <span class="m-2">Documentos</span>
+                </a>
+
+                <div class="collapse mt-2" id="documento_collapse">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#agregar_usuario_modal" class="item-child ps-4 py-3" data-bs-toggle="modal">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="m-2">Agregar Tipo de Documento</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a routerLink="/lista-documentos" class="item-child ps-4 py-3">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <span class="m-2">Lista de Documentos</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item mb-2">
+                <a routerLink="/reporte" class="text-decoration-none p-3 text-white item">
+                    <i class="fa-solid fa-file" style="font-size: 20px; margin-right: 10px;"></i>
+                    <span class="m-2">Reporte</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <button class="btn btn-dark p-3 item w-100 text-start" data-bs-toggle="modal"
+                    data-bs-target="#alert_cerrar_sesion_modal" style="border-radius: 0px;">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size: 20px; margin-right: 10px;"></i>
+                    <span class="m-2">Cerrar Sesion</span>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+</nav>
+
+<div class="modal fade" id="agregar_usuario_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Tipo de Documento</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="categoria_select" class="form-label">Categoria</label>
+                        <select class="form-select" id="categoria_select" #categoria
+                            (change)="limpiarErrores(categoria)">
+                            <option value="0">Elegir una opción</option>
+                            <option *ngFor="let c of categorias" value={{c.codigo}}>{{c.categoria}}</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio
+                        </div>
+                        <div class="valid-feedback">
+
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="tipo_documento" class="form-label">Tipo de Documento</label>
+                        <input type="text" class="form-control" id="tipo_documento" name="tipo_documento" #tipoDocumento
+                            (keyup)="limpiarErrores(tipoDocumento)">
+                        <div class="invalid-feedback">
+                            Este campo es obligatorio
+                        </div>
+                        <div class="valid-feedback">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 0px;">
+                        <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary mt-3"
+                            (click)="guardarTipoDocumento($event)">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alert_cerrar_sesion_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Cerrar Sesion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estas seguro de querer cerrar sesion?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="cerrarSesion()">Cerrar
+                    Sesion</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spinner" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>

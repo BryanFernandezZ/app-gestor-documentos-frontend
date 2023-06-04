@@ -1,0 +1,325 @@
+<div class="navbar-with-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="w-100 navbar-content">
+        <app-contenido-header [titulo]="'Lista de Documentos'"></app-contenido-header>
+
+        <div class="card m-4 shadow-sm p-3 mb-5 bg-body-tertiary rounded custom-border">
+            <div *ngIf="supervisor" class="d-flex justify-content-end align-items-center">
+                <a routerLink="/agregar-documento" type="button" class="btn btn-outline-primary mt-3 me-3">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Agregar Nuevo Documento</span>
+                </a>
+            </div>
+            <hr />
+
+            <div class="p-2">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-1">
+                        <span>Mostrar</span>
+                        <input type="number" class="form-control" [value]="nroElementos" style="width: 70px;"
+                            (change)="setNroElementos(nro_elementos.value)" #nro_elementos />
+                        <!-- <span>Entradas</span> -->
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span>Buscar:</span>
+                        <input type="text" class="form-control" (keyup)="setFiltro(buscar.value)" #buscar
+                            placeholder="Número, suministro o referencia" />
+                    </div>
+                </div>
+
+                <div class="w-100 table-container">
+                    <table class="table table-responsive table-bordered text-uppercase table-striped">
+                        <thead>
+                            <tr class="table-dark">
+                                <!-- <th scope="col" class="text-center">#</th> -->
+                                <th scope="col">Documento</th>
+                                <th scope="col">Numero</th>
+                                <th scope="col">Suministro</th>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Fecha de Derivación</th>
+                                <th scope="col">Usuario Asignado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngIf="!loading">
+                            <tr>
+                                <td colspan="8" class="w-100 text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody *ngIf="loading && documentosMostrar.length === 0">
+                            <tr>
+                                <td colspan="8" class="w-100 text-center">No tienes documentos aún</td>
+                            </tr>
+                        </tbody>
+
+                        <tbody *ngIf="loading">
+                            <tr *ngFor="let d of documentosMostrar | tableFilter:nroPagina:nroElementos:filtro">
+                                <!-- <th scope="row" class="text-center" style="width: 50px;">{{d.codigo}}</th> -->
+                                <td>{{d.documento.tipoDocumento}}</td>
+                                <td [innerHTML]="d.nroDocumento | textoCoincidencia:filtro"></td>
+                                <td [innerHTML]="d.suministro | textoCoincidencia:filtro"></td>
+                                <td [innerHTML]="d.referencia | textoCoincidencia:filtro"></td>
+                                <td>{{d.fechaDerivacion }}</td>
+                                <td>{{d.usuarioAsignado.nombre + " " +d.usuarioAsignado.apellidos}}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a [routerLink]="'/actualizar-documento/' + d.codigo" type="button"
+                                            class="me-2 btn btn-outline-primary" title="Editar">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                        <button type="button" class="me-2 btn btn-outline-success" title="Ver"
+                                            (click)="verDocumento(d)" data-bs-toggle="modal"
+                                            data-bs-target="#ver_documento_modal">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="me-2 btn btn-outline-danger" title="Eliminar"
+                                            data-bs-toggle="modal" data-bs-target="#alerta_eliminar_documento"
+                                            (click)="setDocumentoSeleccionado(d)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+
+                                        <!-- <button *ngIf="d.creado && !d.derivado && !d.notificado" type="button"
+                                            class="btn btn-outline-dark" title="Derivar" data-bs-toggle="modal"
+                                            data-bs-target="#derivar_documento_modal"
+                                            (click)="setDocumentoSeleccionado(d)">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                        </button> -->
+
+                                        <button *ngIf="d.creado && !d.derivado && !d.notificado" type="button"
+                                            class="btn btn-outline-dark" title="Derivar"
+                                            (click)="abrirModal(1, true, d)">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                        </button>
+
+                                        <button *ngIf="d.creado && d.derivado && !d.notificado" type="button"
+                                            class="btn btn-outline-dark" title="Notificar"
+                                            (click)="abrirModal(2, true, d)">
+                                            <i class="fa-solid fa-bell"></i>
+                                        </button>
+
+                                        <button *ngIf="d.creado && d.derivado && d.notificado" type="button"
+                                            class="btn btn-outline-dark" title="Finalizar"
+                                            (click)="abrirModal(3, true, d)">
+                                            <i class="fa-solid fa-check"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-3">
+                    <span class="d-block">Mostrando {{documentos.length}} registros</span>
+
+                    <nav aria-label="paginacion">
+                        <ul class="pagination m-0">
+                            <li class="page-item">
+                                <a type="button" class="page-link" (click)="anteriorPagina()"
+                                    [ngClass]="{'disabled': anteriorDisabled}">Anterior</a>
+                            </li>
+
+                            <li class="page-item active" aria-current="page">
+                                <a type="button" class="page-link" (click)="verPrimeraPagina()">1</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a type="button" class="page-link" (click)="siguientePagina()"
+                                    [ngClass]="{'disabled': siguienteDisabled}">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- TODO: MODAL PARA VER DOCUMENTO -->
+
+<div class="modal fade" id="ver_documento_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Detalles del Documento</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="documentoSeleccionado">
+                    <div class="mb-3">
+                        <div><b>Documento</b></div>
+                        <div class="d-block">{{documentoSeleccionado.documento.tipoDocumento}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Suministro</b></div>
+                        <div class="d-block">{{documentoSeleccionado.suministro}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Referencia</b></div>
+                        <div class="d-block">{{documentoSeleccionado.referencia}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Fecha de Documento</b></div>
+                        <div class="d-block">{{documentoSeleccionado.fechaDocumento}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Nro de Documento</b></div>
+                        <div class="d-block">{{documentoSeleccionado.nroDocumento}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Usuario Asignado</b></div>
+                        <div class="d-block">{{documentoSeleccionado.usuarioAsignado.nombre + ' ' +
+                            documentoSeleccionado.usuarioAsignado.apellidos}}</div>
+                    </div>
+
+                    <!-- TODO: PROBANDO EL ARCHIVO ADJUNTO -->
+
+                    <!-- <div class="mb-3" *ngIf="documentoSeleccionado.archivoAdjunto">
+                        <img [src]="'data:image/jpeg;base64,' + documentoSeleccionado.archivoAdjunto" alt="" width="100">
+                    </div> -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TODO: MODAL PARA ELIMINAR DOCUMENTO -->
+
+<div class="modal fade" id="alerta_eliminar_documento" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Documento</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de eliminar a este documento?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" (click)="eliminarDocumento()"
+                    data-bs-dismiss="modal">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TODO: MODAL PARA DERIVAR DOCUMENTO -->
+
+<div #derivarDocumentoModal class="modal fade" id="derivar_documento_modal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form [formGroup]="documentoDerivar" (ngSubmit)="derivarDocumento()">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Derivar Documento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <h5>Derivar el documento al Área Operativa</h5>
+                        <p>Elige un usuario del área para asignar el documento</p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario_select" class="form-label">Usuarios del Área Operativa</label>
+                        <select class="form-select" id="usuario_select" formControlName="usuarioAsignado"
+                            [ngClass]="{'is-invalid': submitted && documentoDerivar.controls['usuarioAsignado'].errors}">
+                            <option value="0">Elige una opcion</option>
+                            <option *ngFor="let usuario of usuariosArea" [value]="usuario.codigo">{{usuario.nombre}}
+                                {{usuario.apellidos}}</option>
+                        </select>
+
+                        <div *ngIf="documentoDerivar.controls['usuarioAsignado'].hasError('pattern')"
+                            class="invalid-feedback">
+                            Este campo es obligatorio
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Derivar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- TODO: MODAL PARA NOTIFICAR DOCUMENTO -->
+
+<div #notificarDocumentoModal class="modal fade" id="notificar_documento_modal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form [formGroup]="documentoNotificar" (ngSubmit)="notificarDocumento()">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Notificar Documento</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <h5>Asignarás este documento como NOTIFICADO</h5>
+                        <!-- <p>Elige un usuario del área para asignar el documento</p> -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="archivoAdjunto" class="form-label">Archivo Adjunto</label>
+                        <input type="file" id="archivoAdjunto" class="form-control" formControlName="archivoAdjunto"
+                            (change)="archivoAdjuntoSeleccionado($event)"
+                            [ngClass]="{'is-invalid': submitted && documentoNotificar.controls['archivoAdjunto'].errors}">
+
+                        <div *ngIf="documentoNotificar.controls['archivoAdjunto'].hasError('required')"
+                            class="invalid-feedback">
+                            Este campo es obligatorio
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Derivar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- TODO: MODAL PARA NOTIFICAR DOCUMENTO -->
+
+<div #finalizarDocumentoModal class="modal fade" id="finalizar_documento_modal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Finalizar Documento</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <strong>Estás a punto de concluir la línea temporal del documento.</strong>
+                <p>¿Quieres declarar este documento como "Finalizado"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" (click)="finalizarDocumento()">Finalizar</button>
+            </div>
+        </div>
+    </div>
+</div>

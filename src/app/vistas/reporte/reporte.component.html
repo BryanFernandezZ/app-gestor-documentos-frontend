@@ -1,0 +1,187 @@
+<div class="navbar-with-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="w-100 navbar-content">
+        <app-contenido-header [titulo]="'Reporte'"></app-contenido-header>
+
+        <div class="p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-1">
+                    <span>Mostrar</span>
+                    <input type="number" class="form-control" [value]="nroElementos" style="width: 70px;"
+                        (change)="setNroElementos(nro_elementos.value)" #nro_elementos />
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span>Buscar:</span>
+                    <input type="text" class="form-control" (keyup)="setFiltro(buscar.value)" #buscar
+                        placeholder="Número, suministro o referencia" />
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <button type="button" class="btn btn-success" title="Exportar en Excel" (click)="exportarAExcel()">
+                        <i class="fa-solid fa-file-excel"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-100 table-container">
+                <table class="table table-responsive table-bordered text-uppercase table-striped">
+                    <thead>
+                        <tr class="table-dark">
+                            <th scope="col">Documento</th>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Suministro</th>
+                            <th scope="col">Referencia</th>
+                            <th scope="col">Fecha de Derivación</th>
+                            <th scope="col">Usuario Asignado</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody *ngIf="!loading">
+                        <tr>
+                            <td colspan="8" class="w-100 text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody *ngIf="loading && documentosMostrar.length === 0">
+                        <tr>
+                            <td colspan="8" class="w-100 text-center">No tienes documentos aún</td>
+                        </tr>
+                    </tbody>
+
+                    <tbody *ngIf="loading">
+                        <tr *ngFor="let d of documentosMostrar | tableFilter:nroPagina:nroElementos:filtro">
+                            <td>{{d.documento.tipoDocumento}}</td>
+                            <td [innerHTML]="d.nroDocumento | textoCoincidencia:filtro"></td>
+                            <td [innerHTML]="d.suministro | textoCoincidencia:filtro"></td>
+                            <td [innerHTML]="d.referencia | textoCoincidencia:filtro"></td>
+                            <td>{{d.fechaDerivacion }}</td>
+                            <td>{{d.usuarioAsignado.nombre + " " +d.usuarioAsignado.apellidos}}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="me-2 btn btn-outline-primary" title="Ver"
+                                        data-bs-toggle="modal" data-bs-target="#detalle_documento_modal"
+                                        (click)="setDocumentoSeleccionado(d)">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between align-items-center pt-3">
+                    <span class="d-block">Mostrando {{documentos.length}} registros</span>
+
+                    <nav aria-label="paginacion">
+                        <ul class="pagination m-0">
+                            <li class="page-item">
+                                <a type="button" class="page-link" (click)="anteriorPagina()"
+                                    [ngClass]="{'disabled': anteriorDisabled}">Anterior</a>
+                            </li>
+
+                            <li class="page-item active" aria-current="page">
+                                <a type="button" class="page-link" (click)="verPrimeraPagina()">1</a>
+                            </li>
+
+                            <li class="page-item">
+                                <a type="button" class="page-link" (click)="siguientePagina()"
+                                    [ngClass]="{'disabled': siguienteDisabled}">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- TODO: MODAL PARA EL DETALLE DE CADA DOCUMENTO (INCLUYE LINEA DE TIEMPO) -->
+
+    <div class="modal modal-xl fade" id="detalle_documento_modal" tabindex="-1"
+        aria-labelledby="detalle_documento_modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detalle del Documento</h1>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="font-size: 32px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div *ngIf="documentoSeleccionado" class="modal-body">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <span>Documento: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.documento.tipoDocumento}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span>Numero: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.nroDocumento}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span>Suministro: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.suministro}}</span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="mb-3">
+                                <span>Referencia: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.referencia}}</span>
+                            </div>
+                            <div class="mb-3">
+                                <span>Usuario Asignado: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.usuarioAsignado.nombre}} {{documentoSeleccionado.usuarioAsignado.apellidos}}</span>
+                            </div>
+                            <div *ngIf="documentoSeleccionado.usuarioAnterior" class="mb-3">
+                                <span>Usuario Anterior: </span>
+                                <span style="font-weight: lighter;">{{documentoSeleccionado.usuarioAnterior}}</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <br>
+
+                    <div class="d-flex justify-content-between align-items-center linea-temporal">
+                        <div class="linea-item d-flex flex-column align-items-start">
+                            <label class="form-label" for="creado">Creado</label>
+                            <input type="radio" class="form-checked mb-2" [checked]="documentoSeleccionado.creado" id="creado">
+                            <p style="font-weight: lighter;">{{documentoSeleccionado.fechaCreacion}}</p>
+                        </div>
+                        <div class="linea-item d-flex flex-column align-items-center">
+                            <label class="form-label" for="derivado">Derivado</label>
+                            <input type="radio" class="form-checked mb-2" [checked]="documentoSeleccionado.derivado" id="derivado">
+                            <p style="font-weight: lighter;">{{documentoSeleccionado.fechaDerivacion}}</p>
+                        </div>
+                        <div class="linea-item d-flex flex-column align-items-center">
+                            <label class="form-label" for="notificado">Notificado</label>
+                            <input type="radio" class="form-checked mb-2" [checked]="documentoSeleccionado.notificado" id="notificado">
+                            <p style="font-weight: lighter;">{{documentoSeleccionado.fechaNotificacion}}</p>
+                        </div>
+                        <div class="linea-item d-flex flex-column align-items-end">
+                            <label class="form-label" for="finalizado">Finalizado</label>
+                            <input type="radio" class="form-checked mb-2" [checked]="documentoSeleccionado.finalizado" id="finalizado">
+                            <p style="font-weight: lighter;">{{documentoSeleccionado.fechaFinalizacion}}</p>
+                        </div>
+                        <div class="linea"></div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>

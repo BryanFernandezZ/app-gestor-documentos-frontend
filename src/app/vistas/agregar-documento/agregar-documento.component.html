@@ -1,0 +1,160 @@
+<div class="navbar-with-content">
+
+    <app-navbar></app-navbar>
+
+    <div class="w-100 navbar-content">
+        <app-contenido-header [titulo]="'Agregar Documento'"></app-contenido-header>
+
+        <div class="d-flex gap-3 p-4">
+            <form class="w-100" (ngSubmit)="guardarDocumento()" [formGroup]="documentoRequest">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="documento" class="form-label">Documento</label>
+                                    <select class="form-select" id="documento" formControlName="documento" [ngClass]="{'is-invalid': documentoRequest.controls['documento'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['documento'].errors && submited}">
+                                        <option [value]="tipoDocumento.codigo" *ngFor="let tipoDocumento of tipoDocumentos">
+                                            {{tipoDocumento.tipoDocumento}}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="documentoRequest.controls['documento'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fecha_documento" class="form-label">Fecha de Documento</label>
+                                    <input type="date" class="form-control" id="fecha_documento"
+                                        formControlName="fechaDocumento" [ngClass]="{'is-invalid': documentoRequest.controls['fechaDocumento'].errors && submited,
+                                        'is-valid': !documentoRequest.controls['fechaDocumento'].errors && submited}">
+                                    <div *ngIf="documentoRequest.controls['fechaDocumento'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nro_documento" class="form-label">Nro de Documento</label>
+                                    <input type="text" class="form-control" id="nro_documento"
+                                        formControlName="nroDocumento" [ngClass]="{'is-invalid': documentoRequest.controls['nroDocumento'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['nroDocumento'].errors && submited}" maxlength="25">
+                                    <div *ngIf="documentoRequest.controls['nroDocumento'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div *ngIf="documentoRequest.controls['nroDocumento'].hasError('minlength') && submited"
+                                        class="invalid-feedback">
+                                        Este campo debe contener como minimo 18 caracteres
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="remitente" class="form-label">Remitente</label>
+                                    <input type="text" class="form-control" id="remitente" formControlName="remitente"
+                                        [ngClass]="{'is-invalid': documentoRequest.controls['remitente'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['remitente'].errors && submited}">
+                                    <div *ngIf="documentoRequest.controls['remitente'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="direccion_procesal" class="form-label">Dirección Procesal</label>
+                                    <input type="text" class="form-control" id="direccion_procesal"
+                                        formControlName="direccionProcesal" [ngClass]="{'is-invalid': documentoRequest.controls['direccionProcesal'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['direccionProcesal'].errors && submited}">
+                                    <div *ngIf="documentoRequest.controls['direccionProcesal'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label for="suministro" class="form-label">Suministro</label>
+                                    <input type="text" class="form-control" id="suministro" formControlName="suministro"
+                                        [ngClass]="{'is-invalid': documentoRequest.controls['suministro'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['suministro'].errors && submited}" maxlength="8">
+                                    <div *ngIf="documentoRequest.controls['suministro'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div *ngIf="documentoRequest.controls['suministro'].hasError('pattern') && submited"
+                                        class="invalid-feedback">
+                                        Este campo debe ser alfanumerico y contener 8 caracteres
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="referencia" class="form-label">Referencia</label>
+                                    <input type="text" class="form-control" id="referencia" formControlName="referencia"
+                                        [ngClass]="{'is-invalid': documentoRequest.controls['referencia'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['referencia'].errors && submited}" maxlength="13">
+                                    <div *ngIf="documentoRequest.controls['referencia'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div *ngIf="documentoRequest.controls['referencia'].hasError('pattern') && submited"
+                                        class="invalid-feedback">
+                                        Este campo debe ser alfanumerico y contener 13 caracteres
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripcion</label>
+                                    <input type="text" class="form-control" id="descripcion"
+                                        formControlName="descripcion" [ngClass]="{'is-invalid': documentoRequest.controls['descripcion'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['descripcion'].errors && submited}" maxlength="100">
+                                    <div *ngIf="documentoRequest.controls['descripcion'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="usuario_asignado" class="form-label">Usuario Asignado</label>
+                                    <input type="text" name="usuario_asignado" id="usuario_asignado"
+                                        class="form-control" formControlName="usuarioAsignado" [ngClass]="{'is-invalid': documentoRequest.controls['usuarioAsignado'].errors && submited,
+                                    'is-valid': !documentoRequest.controls['usuarioAsignado'].errors && submited}">
+
+                                    <div *ngIf="documentoRequest.controls['usuarioAsignado'].hasError('required') && submited"
+                                        class="invalid-feedback">
+                                        Este campo es obligatorio
+                                    </div>
+                                    <div class="valid-feedback">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary me-3">Guardar</button>
+                        <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
