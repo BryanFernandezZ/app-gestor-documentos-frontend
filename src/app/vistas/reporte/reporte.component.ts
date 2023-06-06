@@ -114,7 +114,11 @@ export class ReporteComponent implements OnInit {
         referencia: d.referencia,
         usuarioAsignado: d.usuarioAsignado.nombre + d.usuarioAsignado.apellidos,
         usuarioAnterior: d.usuarioAnterior === null ? "" : d.usuarioAnterior,
-        fechaDocumento: d.fechaDocumento
+        fechaDocumento: d.fechaDocumento,
+        fechaCreacion: d.fechaCreacion,
+        fechaDerivacion: d.fechaDerivacion,
+        fechaNotificacion: d.fechaNotificacion,
+        fechaFinalizacion: d.fechaFinalizacion
       }
 
       data.push(documento);
@@ -138,4 +142,8 @@ export interface DocumentoExcelExport {
   usuarioAsignado: string;
   usuarioAnterior: string;
   fechaDocumento: string;
+  fechaCreacion: string;
+  fechaDerivacion: string;
+  fechaNotificacion: string;
+  fechaFinalizacion: string;
 }

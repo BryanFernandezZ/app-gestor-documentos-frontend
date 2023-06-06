@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="w-100 table-container">
-                    <table class="table table-responsive table-bordered text-uppercase table-striped">
+                    <table class="table table-responsive table-bordered text-capitalize table-striped">
                         <thead>
                             <tr class="table-dark">
                                 <!-- <th scope="col" class="text-center">#</th> -->
@@ -62,7 +62,6 @@
 
                         <tbody *ngIf="loading">
                             <tr *ngFor="let d of documentosMostrar | tableFilter:nroPagina:nroElementos:filtro">
-                                <!-- <th scope="row" class="text-center" style="width: 50px;">{{d.codigo}}</th> -->
                                 <td>{{d.documento.tipoDocumento}}</td>
                                 <td [innerHTML]="d.nroDocumento | textoCoincidencia:filtro"></td>
                                 <td [innerHTML]="d.suministro | textoCoincidencia:filtro"></td>
@@ -85,13 +84,6 @@
                                             (click)="setDocumentoSeleccionado(d)">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-
-                                        <!-- <button *ngIf="d.creado && !d.derivado && !d.notificado" type="button"
-                                            class="btn btn-outline-dark" title="Derivar" data-bs-toggle="modal"
-                                            data-bs-target="#derivar_documento_modal"
-                                            (click)="setDocumentoSeleccionado(d)">
-                                            <i class="fa-solid fa-paper-plane"></i>
-                                        </button> -->
 
                                         <button *ngIf="d.creado && !d.derivado && !d.notificado" type="button"
                                             class="btn btn-outline-dark" title="Derivar"
@@ -182,12 +174,6 @@
                         <div class="d-block">{{documentoSeleccionado.usuarioAsignado.nombre + ' ' +
                             documentoSeleccionado.usuarioAsignado.apellidos}}</div>
                     </div>
-
-                    <!-- TODO: PROBANDO EL ARCHIVO ADJUNTO -->
-
-                    <!-- <div class="mb-3" *ngIf="documentoSeleccionado.archivoAdjunto">
-                        <img [src]="'data:image/jpeg;base64,' + documentoSeleccionado.archivoAdjunto" alt="" width="100">
-                    </div> -->
                 </div>
             </div>
             <div class="modal-footer">
