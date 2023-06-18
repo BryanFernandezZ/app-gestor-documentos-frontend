@@ -1,210 +1,176 @@
-<div class="navbar-with-content">
+<app-contenido-header [titulo]="'Nuevo Usuario'"></app-contenido-header>
 
-    <app-navbar></app-navbar>
+<div class="d-flex gap-3 p-4">
+    <form class="w-100" enctype="multipart/form-data" (ngSubmit)="guardarUsuario()" [formGroup]="usuarioRequest">
+        <div class="card p-3">
+            <div class="row">
+                <div class="col">
+                    <h4>Información Personal</h4>
 
-    <div class="w-100 navbar-content">
-        <app-contenido-header [titulo]="'Nuevo Usuario'"></app-contenido-header>
-
-        <div class="d-flex gap-3 p-4">
-            <form class="w-100" enctype="multipart/form-data" (ngSubmit)="guardarUsuario()"
-                [formGroup]="usuarioRequest">
-                <div class="card p-3">
-                    <div class="row">
-                        <div class="col">
-                            <h4>Información Personal</h4>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="nombre">Nombre</label>
-                                <input type="text" class="form-control" name="nombre" id="nombre" #nombre
-                                    [class.is-invalid]="!errors['nombre']['valido'] && errors['nombre']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['nombre']['valido'] && nombre.value.length > 0"
-                                    (keyup)="validarInput('nombre', nombre.value.length)" formControlName="nombre">
-                                <div class="invalid-feedback">
-                                    {{errors["nombre"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["nombre"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="apellido">Apellidos</label>
-                                <input type="text" class="form-control" name="apellido" id="apellido" #apellidos
-                                    [class.is-invalid]="!errors['apellidos']['valido'] && errors['apellidos']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['apellidos']['valido'] && apellidos.value.length > 0"
-                                    (keyup)="validarInput('apellidos', apellidos.value.length)"
-                                    formControlName="apellidos">
-                                <div class="invalid-feedback">
-                                    {{errors["apellidos"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["apellidos"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="tipo_identidad">Tipo de Identidad</label>
-                                <select class="form-select" name="tipo_identidad" id="tipo_identidad" #tipoIdentidad
-                                    [class.is-invalid]="!errors['tipoIdentidad']['valido'] && errors['tipoIdentidad']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['tipoIdentidad']['valido'] && tipoIdentidad.value.length > 0"
-                                    (change)="validarInput('tipoIdentidad', tipoIdentidad.value.length, true, tipoIdentidad.selectedIndex)"
-                                    formControlName="tipoIdentidad">
-                                    <option value="0">Elegir una opción</option>
-                                    <option value="1">DNI</option>
-                                    <option value="2">Pasaporte</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    {{errors["tipoIdentidad"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["tipoIdentidad"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="nro_identidad">N° Identidad</label>
-                                <input class="form-control" type="text" name="nro_identidad" id="nro_identidad"
-                                    formControlName="nroIdentidad" #nroIdentidad
-                                    [class.is-invalid]="!errors['nroIdentidad']['valido'] && errors['nroIdentidad']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['nroIdentidad']['valido'] && nroIdentidad.value.length > 0"
-                                    (keyup)="validarInput('nroIdentidad', nroIdentidad.value.length)"
-                                    maxlength={{maxLength}}>
-                                <div class="invalid-feedback">
-                                    {{errors["nroIdentidad"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["nroIdentidad"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="telefono">Telefono</label>
-                                <input type="text" class="form-control" name="telefono" id="telefono"
-                                    formControlName="telefono" #telefono
-                                    [class.is-invalid]="!errors['telefono']['valido'] && errors['telefono']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['telefono']['valido'] && telefono.value.length > 0"
-                                    (keyup)="validarInput('telefono', telefono.value.length)" [maxlength]="9">
-                                <div class="invalid-feedback">
-                                    {{errors["telefono"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["telefono"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="correo">Correo</label>
-                                <input type="email" class="form-control" name="correo" id="correo"
-                                    formControlName="correo" #correo
-                                    [class.is-invalid]="!errors['correo']['valido'] && errors['correo']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['correo']['valido'] && correo.value.length > 0"
-                                    (keyup)="validarInput('correo', correo.value.length)">
-                                <div class="invalid-feedback">
-                                    {{errors["correo"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["correo"]['mensaje']}}
-                                </div>
-                            </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" id="nombre" #nombre
+                            [ngClass]="{'is-invalid': usuarioRequest.get('nombre')?.errors && submitted}"
+                            formControlName="nombre">
+                        <div *ngIf="usuarioRequest.get('nombre')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
                         </div>
-
-                        <div class="vr mx-2" style="padding: 0px;"></div>
-
-                        <div class="col">
-                            <div class="mb-3">
-                                <label class="form-label" for="nombre">Avatar</label>
-                                <input type="file" class="form-control" name="avatar" id="avatar"
-                                    placeholder="Escoger archivo" (change)="archivoSeleccionado($event)">
-                            </div>
-
-                            <h4>Credenciales de Sistema</h4>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="area">Área</label>
-                                <select class="form-select" name="area" id="area" #area
-                                    [class.is-invalid]="!errors['area']['valido'] && errors['area']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['area']['valido'] && area.value.length > 0"
-                                    (change)="validarInput('area', area.value.length, true, area.selectedIndex)"
-                                    formControlName="area">
-                                    <option value="0">Elegir una opción</option>
-                                    <option value="1">Operativa</option>
-                                    <option value="2">Administrativa</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    {{errors["area"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["area"]['mensaje']}}
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="rol">Roles de Usuario</label>
-                                <select class="form-select" name="rol" id="rol" #rol
-                                    [class.is-invalid]="!errors['rol']['valido'] && errors['rol']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['rol']['valido'] && rol.value.length > 0"
-                                    (change)="validarInput('rol', rol.value.length, true, rol.selectedIndex)"
-                                    formControlName="rol">
-                                    <option selected>Elegir una opción</option>
-                                    <option value="1">Supervisor</option>
-                                    <option value="2">Gestor</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    {{errors["rol"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["rol"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="usuario">Usuario</label>
-                                <input type="text" class="form-control" name="usuario" id="usuario" #usuario
-                                    [class.is-invalid]="!errors['usuario']['valido'] && errors['usuario']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['usuario']['valido'] && usuario.value.length > 0"
-                                    (keyup)="validarInput('usuario', usuario.value.length)" formControlName="usuario">
-                                <div class="invalid-feedback">
-                                    {{errors["usuario"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["usuario"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="contrasenia">Contraseña</label>
-                                <input type="password" class="form-control" name="contrasenia" id="contrasenia"
-                                    #contrasenia
-                                    [class.is-invalid]="!errors['contrasenia']['valido'] && errors['contrasenia']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['contrasenia']['valido'] && contrasenia.value.length > 0"
-                                    (keyup)="validarInput('contrasenia', contrasenia.value.length)"
-                                    formControlName="contrasenia">
-                                <!-- (keyup)="validarContrasenia($event)" -->
-                                <div class="invalid-feedback">
-                                    {{errors["contrasenia"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["contrasenia"]['mensaje']}}
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="confirmar_contrasenia">Confirmar Contraseña</label>
-                                <input type="password" class="form-control" name="confirmar_contrasenia"
-                                    id="confirmar_contrasenia" #confirmarContrasenia
-                                    [class.is-invalid]="!errors['confirmarContrasenia']['valido'] && errors['confirmarContrasenia']['mensaje'] !== ''"
-                                    [class.is-valid]="errors['confirmarContrasenia']['valido'] && confirmarContrasenia.value.length > 0"
-                                    (keyup)="validarInput('confirmarContrasenia', confirmarContrasenia.value.length)">
-                                <!-- (keyup)="validarContrasenia($event)" -->
-                                <div class="invalid-feedback">
-                                    {{errors["confirmarContrasenia"]['mensaje']}}
-                                </div>
-                                <div class="valid-feedback">
-                                    {{errors["confirmarContrasenia"]['mensaje']}}
-                                </div>
-                            </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="apellido">Apellidos</label>
+                        <input type="text" class="form-control" name="apellido" id="apellido" #apellidos
+                            [ngClass]="{'is-invalid': usuarioRequest.get('apellidos')?.errors && submitted}"
+                            formControlName="apellidos">
+                        <div *ngIf="usuarioRequest.get('nombre')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="tipo_identidad">Tipo de Identidad</label>
+                        <select class="form-select" name="tipo_identidad" id="tipo_identidad" #tipoIdentidad
+                            [ngClass]="{'is-invalid': usuarioRequest.get('tipoIdentidad')?.errors && submitted}"
+                            formControlName="tipoIdentidad" (change)="cambiarMaxlength(tipoIdentidad.value)">
+                            <option value="0">Elegir una opción</option>
+                            <option value="1">DNI</option>
+                            <option value="2">Pasaporte</option>
+                        </select>
+                        <div *ngIf="usuarioRequest.get('tipoIdentidad')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="nro_identidad">N° Identidad</label>
+                        <input class="form-control" type="text" name="nro_identidad" id="nro_identidad"
+                            [ngClass]="{'is-invalid': usuarioRequest.get('nroIdentidad')?.errors && submitted}"
+                            formControlName="nroIdentidad" #nroIdentidad [maxlength]="maxLength">
+                        <div *ngIf="usuarioRequest.get('nroIdentidad')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('nroIdentidad')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo debe contener solo numeros*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('nroIdentidad')?.hasError('minlength') &&
+                        !usuarioRequest.get('nroIdentidad')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo debe contener {{maxLength}} digitos*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="telefono">Telefono</label>
+                        <input type="text" class="form-control" name="telefono" id="telefono"
+                            [ngClass]="{'is-invalid': usuarioRequest.get('telefono')?.errors && submitted}"
+                            formControlName="telefono" #telefono [maxlength]="9">
+                        <div *ngIf="usuarioRequest.get('telefono')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('telefono')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo es debe contener solo numeros*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('telefono')?.hasError('minlength') &&
+                        !usuarioRequest.get('telefono')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo es debe contener 9 digitos*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="correo">Correo</label>
+                        <input type="email" class="form-control" name="correo" id="correo"
+                            [ngClass]="{'is-invalid': usuarioRequest.get('correo')?.errors && submitted}"
+                            formControlName="correo" #correo>
+                        <div *ngIf="usuarioRequest.get('correo')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('correo')?.hasError('email')" class="invalid-feedback">
+                            *Este campo no es un correo valido*
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center align-items-center mt-3">
-                    <button type="submit" class="btn btn-primary me-2">Guardar</button>
-                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+
+                <div class="vr mx-2" style="padding: 0px;"></div>
+
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre">Avatar</label>
+                        <input type="file" class="form-control" name="avatar" id="avatar" placeholder="Escoger archivo"
+                            (change)="archivoSeleccionado($event)">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="area">Área</label>
+                        <select class="form-select" name="area" id="area" #area
+                            [ngClass]="{'is-invalid': usuarioRequest.get('area')?.errors && submitted}"
+                            formControlName="area">
+                            <option value="0">Elegir una opción</option>
+                            <option value="1">Operativa</option>
+                            <option value="2">Administrativa</option>
+                        </select>
+                        <div *ngIf="usuarioRequest.get('area')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="rol">Roles de Usuario</label>
+                        <select class="form-select" name="rol" id="rol" #rol
+                            [ngClass]="{'is-invalid': usuarioRequest.get('rol')?.errors && submitted}"
+                            formControlName="rol">
+                            <option value="0">Elegir una opción</option>
+                            <option value="1">Supervisor</option>
+                            <option value="2">Gestor</option>
+                        </select>
+                        <div *ngIf="usuarioRequest.get('rol')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                    </div>
+
+                    <h4>Credenciales de Sistema</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="usuario">Usuario</label>
+                        <input type="text" class="form-control" name="usuario" id="usuario" #usuario
+                            [ngClass]="{'is-invalid': usuarioRequest.get('usuario')?.errors && submitted}"
+                            formControlName="usuario">
+                        <div *ngIf="usuarioRequest.get('usuario')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="contrasenia">Contraseña</label>
+                        <input type="password" class="form-control" name="contrasenia" id="contrasenia" #contrasenia
+                            [ngClass]="{'is-invalid': usuarioRequest.get('contrasenia')?.errors && submitted}"
+                            formControlName="contrasenia">
+                        <div *ngIf="usuarioRequest.get('contrasenia')?.hasError('required')" class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('contrasenia')?.hasError('pattern')" class="invalid-feedback">
+                            *Este campo debe contener por lo menos una mayuscula y un simbolo*
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="confirmar_contrasenia">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" name="confirmar_contrasenia"
+                            id="confirmar_contrasenia" #confirmarContrasenia
+                            [ngClass]="{'is-invalid': (usuarioRequest.get('confirmarContrasenia')?.errors || contrasenia.value !== confirmarContrasenia.value) && submitted}"
+                            formControlName="confirmarContrasenia">
+                        <div *ngIf="usuarioRequest.get('confirmarContrasenia')?.hasError('required')"
+                            class="invalid-feedback">
+                            *Este campo es obligatorio*
+                        </div>
+                        <div *ngIf="usuarioRequest.get('confirmarContrasenia')?.hasError('pattern')"
+                            class="invalid-feedback">
+                            *Este campo debe contener por lo menos una mayuscula y un simbolo*
+                        </div>
+                        <div *ngIf="contrasenia.value !== confirmarContrasenia.value &&
+                        !usuarioRequest.get('confirmarContrasenia')?.hasError('required') &&
+                        !usuarioRequest.get('confirmarContrasenia')?.hasError('pattern')" class="invalid-feedback">
+                            *Las contraseñas no coinciden*
+                        </div>
+                    </div>
                 </div>
-            </form>
-
+            </div>
         </div>
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <button type="submit" class="btn btn-primary me-2">Guardar</button>
+            <button type="reset" class="btn btn-secondary" (click)="submitted = false;">Cancelar</button>
+        </div>
+    </form>
 
-    </div>
 </div>

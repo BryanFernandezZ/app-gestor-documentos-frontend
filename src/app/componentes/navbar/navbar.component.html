@@ -77,7 +77,7 @@
 
                 <div class="collapse mt-2" id="documento_collapse">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
+                        <li *ngIf="supervisor && area" class="nav-item">
                             <a href="#agregar_usuario_modal" class="item-child ps-4 py-3" data-bs-toggle="modal">
                                 <i class="fa-solid fa-chevron-right"></i>
                                 <span class="m-2">Agregar Tipo de Documento</span>

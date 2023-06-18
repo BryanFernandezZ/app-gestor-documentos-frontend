@@ -1,107 +1,99 @@
-<div class="navbar-with-content">
-    <app-navbar></app-navbar>
-    <!-- style="width: 280px;" -->
+<app-contenido-header [titulo]="'Lista de Usuarios'"></app-contenido-header>
 
-    <div class="w-100 navbar-content">
-        <app-contenido-header [titulo]="'Lista de Usuarios'"></app-contenido-header>
+<div class="card m-4 shadow-sm p-3 mb-5 bg-body-tertiary rounded custom-border">
+    <div class="d-flex justify-content-end align-items-center">
+        <a routerLink="/agregar-usuario" type="button" class="btn btn-outline-primary mt-3 me-3">
+            <i class="fa-solid fa-plus"></i>
+            <span>Agregar Nuevo Usuario</span>
+        </a>
+    </div>
+    <hr />
 
-        <div class="card m-4 shadow-sm p-3 mb-5 bg-body-tertiary rounded custom-border">
-            <div class="d-flex justify-content-end align-items-center">
-                <a routerLink="/agregar-usuario" type="button" class="btn btn-outline-primary mt-3 me-3">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Agregar Nuevo Usuario</span>
-                </a>
-            </div>
-            <hr />
-
-            <div class="d-flex justify-content-between align-items-center my-3">
-                <div class="d-flex align-items-center gap-1">
-                    <span>Mostrar</span>
-                    <input type="number" class="form-control" value="10" style="width: 70px;" />
-                    <span>Entradas</span>
-                </div>
-                <div class="d-flex align-items-center gap-1">
-                    <span>Buscar:</span>
-                    <input type="text" class="form-control" (keyup)="filtrarUsuarios($event)" />
-                </div>
-            </div>
-
-            <div class="w-100 table-container">
-                <table class="table table-bordered table-striped text-capitalize">
-                    <thead class="table-dark">
-                        <tr>
-                            <!-- <th scope="col" class="text-center">#</th> -->
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellidos</th>
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Rol</th>
-                            <th scope="col">Área</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngIf="!loading">
-                            <td colspan="8" class="text-center">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let usuario of usuariosMostrar$ | async">
-                            <!-- <th scope="row" class="text-center">{{usuario.codigo}}</th> -->
-                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.nombre">{{usuario.nombre}}</td>
-                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.apellidos">
-                                {{usuario.apellidos}}</td>
-                            <td>{{usuario.usuario}}</td>
-                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.rol.rol">
-                                {{usuario.rol.rol}}</td>
-                            <td class="text-truncate" style="max-width: 80px;" [title]="usuario.area.area">
-                                {{usuario.area.area}}</td>
-                            <td>{{usuario.active ? "Activo": "Inactivo"}}</td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a [routerLink]="['/actualizar-usuario', usuario.codigo]" type="button"
-                                        class="me-2 btn btn-outline-primary" title="Editar">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <a href="#ver_usuario_modal" type="button" class="me-2 btn btn-outline-success" title="Ver"
-                                        (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                    <a href="#alerta_eliminar_usuario" type="button" class="btn btn-outline-danger"
-                                        title="Eliminar" (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center my-3">
-                <span class="d-block">Mostrando {{usuariosMostrar.length}} entradas</span>
-
-                <nav aria-label="...">
-                    <ul class="pagination">
-                        <li class="page-item disabled">
-                            <a class="page-link">Anterior</a>
-                        </li>
-
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-
-                        <li class="page-item">
-                            <a class="page-link" href="#">Siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <div class="d-flex align-items-center gap-1">
+            <span>Mostrar</span>
+            <input type="number" class="form-control" value="10" style="width: 70px;" />
+            <span>Entradas</span>
+        </div>
+        <div class="d-flex align-items-center gap-1">
+            <span>Buscar:</span>
+            <input type="text" class="form-control" (keyup)="filtrarUsuarios($event)" />
         </div>
     </div>
 
+    <div class="w-100 table-container">
+        <table class="table table-bordered table-striped text-capitalize">
+            <thead class="table-dark">
+                <tr>
+                    <!-- <th scope="col" class="text-center">#</th> -->
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Área</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="!loading">
+                    <td colspan="8" class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngFor="let usuario of usuariosMostrar$ | async">
+                    <!-- <th scope="row" class="text-center">{{usuario.codigo}}</th> -->
+                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.nombre">{{usuario.nombre}}</td>
+                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.apellidos">
+                        {{usuario.apellidos}}</td>
+                    <td>{{usuario.usuario}}</td>
+                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.rol.rol">
+                        {{usuario.rol.rol}}</td>
+                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.area.area">
+                        {{usuario.area.area}}</td>
+                    <td>{{usuario.active ? "Activo": "Inactivo"}}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a [routerLink]="['/actualizar-usuario', usuario.codigo]" type="button"
+                                class="me-2 btn btn-outline-primary" title="Editar">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <a href="#ver_usuario_modal" type="button" class="me-2 btn btn-outline-success" title="Ver"
+                                (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <a href="#alerta_eliminar_usuario" type="button" class="btn btn-outline-danger"
+                                title="Eliminar" (click)="setUsuarioSeleccionado(usuario)" data-bs-toggle="modal">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <span class="d-block">Mostrando {{usuariosMostrar.length}} entradas</span>
+
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link">Anterior</a>
+                </li>
+
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">1</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 
 

@@ -50,4 +50,8 @@ export class DocumentoService {
   finalizarDocumento(codigo: number): Observable<any> {
     return this.httpClient.get<any>(`${this.baseUrl}/finalizar/${codigo}`);
   }
+
+  obtenerCantidadDocumentos(): Observable<any> {
+    return this.httpClient.get<any>(`${this.baseUrl}/totalDocumentos`);
+  }
 }

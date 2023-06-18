@@ -42,3 +42,5 @@ testem.log
 Thumbs.db
 
 /src/assets/img/temporal-profile-picture.jpg
+
+/.vscode

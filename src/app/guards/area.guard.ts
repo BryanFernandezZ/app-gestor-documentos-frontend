@@ -6,7 +6,7 @@ import { UsuarioService } from '../servicios/usuario.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RolGuard implements CanActivate {
+export class AreaGuard implements CanActivate {
 
   constructor(private usuarioService: UsuarioService, private router: Router) { }
 
@@ -21,13 +21,12 @@ export class RolGuard implements CanActivate {
     }
 
     return permiso;
+
   }
 
   checkUserPermission(route: ActivatedRouteSnapshot): boolean {
-    const { rol } = this.usuarioService.getUsuarioLogueado().rol;
-    return rol.toString().toLowerCase() === route.data['rol'] ? true : false
+    const { area } = this.usuarioService.getUsuarioLogueado().area;
+    return area.toString().toLowerCase() === route.data['area'] ? true : false
   }
 
 }
-
-

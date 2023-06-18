@@ -51,4 +51,8 @@ export class UsuarioService {
   obtenerUsuariosArea(area: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.baseUrl}/usuariosArea/${area}`);
   }
+
+  obtenerCantidadUsuarios(): Observable<any> {
+    return this.httpClient.get<any>(`${this.baseUrl}/totalUsuarios`);
+  }
 }

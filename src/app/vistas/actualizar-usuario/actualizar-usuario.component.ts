@@ -21,6 +21,7 @@ export class ActualizarUsuarioComponent implements OnInit {
   usuario: any
   usuarioId: number = 0;
   contraIncompatibles: boolean | undefined;
+  contraseniaCambio: boolean = false;
   initModal: boolean | undefined;
   errorContraText = "";
   contrasenia = "";
@@ -114,10 +115,13 @@ export class ActualizarUsuarioComponent implements OnInit {
     formData.append("contrasenia", this.usuarioRequest?.get("contrasenia")!.value);
     formData.append("active", this.usuarioRequest?.get("active")!.value.toString());
 
+    console.log( { formData} );
+
     return formData;
   }
 
   actualizarContrasenia() {
+    this.contraseniaCambio = true;
     if (this.contraseniaForm.valid) {
       this.usuarioRequest?.get("contrasenia")?.setValue(this.contraseniaForm.get("contrasenia")?.value);
       this.limpiarEstilosCaja();

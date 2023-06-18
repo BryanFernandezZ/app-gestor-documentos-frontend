@@ -1,111 +1,100 @@
-<div class="navbar-with-content">
+<app-contenido-header [titulo]="'Actualizar Usuario'"></app-contenido-header>
 
-    <app-navbar></app-navbar>
+<div class="d-flex gap-3 p-4">
+    <form *ngIf="usuario" class="w-100" enctype="multipart/form-data" (ngSubmit)="actualizarUsuario()"
+        [formGroup]="usuarioRequest!!">
+        <div class="card p-3">
+            <div class="row">
+                <div class="col">
+                    <h4>Información Personal</h4>
 
-    <div class="w-100 navbar-content">
-        <app-contenido-header [titulo]="'Actualizar Usuario'"></app-contenido-header>
-
-        <div class="d-flex gap-3 p-4">
-            <form *ngIf="usuario" class="w-100" enctype="multipart/form-data" (ngSubmit)="actualizarUsuario()"
-                [formGroup]="usuarioRequest!!">
-                <div class="card p-3">
-                    <div class="row">
-                        <div class="col">
-                            <h4>Información Personal</h4>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="nombre">Nombre</label>
-                                <input type="text" class="form-control" name="nombre" id="nombre"
-                                    formControlName="nombre">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="apellido">Apellidos</label>
-                                <input type="text" class="form-control" name="apellido" id="apellido"
-                                    formControlName="apellidos">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="tipo_identidad">Tipo de Identidad</label>
-                                <select class="form-select" name="tipo_identidad" id="tipo_identidad"
-                                    formControlName="tipoIdentidad">
-                                    <option selected>Elegir una opción</option>
-                                    <option value="1">DNI</option>
-                                    <option value="2">Pasaporte</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="nro_identidad">N° Identidad</label>
-                                <input class="form-control" type="number" name="nro_identidad" id="nro_identidad"
-                                    formControlName="nroIdentidad">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="telefono">Telefono</label>
-                                <input type="text" class="form-control" name="telefono" id="telefono"
-                                    formControlName="telefono">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="correo">Correo</label>
-                                <input type="email" class="form-control" name="correo" id="correo"
-                                    formControlName="correo">
-                            </div>
-                        </div>
-
-                        <div class="vr mx-2" style="padding: 0px;"></div>
-
-                        <div class="col">
-                            <div class="mb-3">
-                                <label class="form-label" for="nombre">Avatar</label>
-                                <input type="file" class="form-control" name="avatar" id="avatar"
-                                    placeholder="Escoger archivo" (change)="archivoSeleccionado($event)">
-                            </div>
-
-                            <h4>Credenciales de Sistema</h4>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="area">Área</label>
-                                <select class="form-select" name="area" id="area" formControlName="area">
-                                    <option selected>Elegir una opción</option>
-                                    <option value="1">Operativa</option>
-                                    <option value="2">Administrativa</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label" for="rol">Roles de Usuario</label>
-                                <select class="form-select" name="rol" id="rol" formControlName="rol">
-                                    <option selected>Elegir una opción</option>
-                                    <option value="1">Supervisor</option>
-                                    <option value="2">Gestor</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="usuario">Usuario</label>
-                                <input type="text" class="form-control" name="usuario" id="usuario"
-                                    formControlName="usuario">
-                            </div>
-
-                            <div class="form-check mb-3">
-                                <input type="checkbox" class="form-check-input" name="active" id="active"
-                                    formControlName="active">
-                                <label for="active" class="form-check-label">Activo</label>
-                            </div>
-
-
-
-                            <a href="#cambiar_contrasenia_modal" type="button" class="btn btn-warning"
-                                data-bs-toggle="modal">Cambiar Contraseña</a>
-
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" id="nombre" formControlName="nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="apellido">Apellidos</label>
+                        <input type="text" class="form-control" name="apellido" id="apellido"
+                            formControlName="apellidos">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="tipo_identidad">Tipo de Identidad</label>
+                        <select class="form-select" name="tipo_identidad" id="tipo_identidad"
+                            formControlName="tipoIdentidad">
+                            <option selected>Elegir una opción</option>
+                            <option value="1">DNI</option>
+                            <option value="2">Pasaporte</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="nro_identidad">N° Identidad</label>
+                        <input class="form-control" type="number" name="nro_identidad" id="nro_identidad"
+                            formControlName="nroIdentidad">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="telefono">Telefono</label>
+                        <input type="text" class="form-control" name="telefono" id="telefono"
+                            formControlName="telefono">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="correo">Correo</label>
+                        <input type="email" class="form-control" name="correo" id="correo" formControlName="correo">
                     </div>
                 </div>
-                <div class="d-flex justify-content-center align-items-center mt-3">
-                    <button type="submit" class="btn btn-primary me-2">Guardar</button>
-                    <a routerLink="/lista-usuarios" type="button" class="btn btn-secondary">Cancelar</a>
+
+                <div class="vr mx-2" style="padding: 0px;"></div>
+
+                <div class="col">
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre">Avatar</label>
+                        <input type="file" class="form-control" name="avatar" id="avatar" placeholder="Escoger archivo"
+                            (change)="archivoSeleccionado($event)">
+                    </div>
+
+                    <h4>Credenciales de Sistema</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="area">Área</label>
+                        <select class="form-select" name="area" id="area" formControlName="area">
+                            <option selected>Elegir una opción</option>
+                            <option value="1">Operativa</option>
+                            <option value="2">Administrativa</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="rol">Roles de Usuario</label>
+                        <select class="form-select" name="rol" id="rol" formControlName="rol">
+                            <option selected>Elegir una opción</option>
+                            <option value="1">Supervisor</option>
+                            <option value="2">Gestor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="usuario">Usuario</label>
+                        <input type="text" class="form-control" name="usuario" id="usuario" formControlName="usuario">
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" name="active" id="active"
+                            formControlName="active">
+                        <label for="active" class="form-check-label">Activo</label>
+                    </div>
+
+
+
+                    <a href="#cambiar_contrasenia_modal" type="button" class="btn btn-warning"
+                        data-bs-toggle="modal">Cambiar Contraseña</a>
+
                 </div>
-            </form>
-
+            </div>
         </div>
+        <div class="d-flex justify-content-center align-items-center mt-3">
+            <button type="submit" class="btn btn-primary me-2">Guardar</button>
+            <a routerLink="/lista-usuarios" type="button" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
 
-    </div>
 </div>
 
 <div class="modal fade" id="cambiar_contrasenia_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -144,8 +133,10 @@
                         </div>
                     </div>
                     <div class="modal-footer mt-4" style="padding: 12px 0px 0px 0px;">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarEstilosCaja()">Cancelar</button>
-                        <button type="submit" class="btn btn-success" [disabled]="contraIncompatibles || initModal" data-bs-dismiss="modal">Guardar</button>
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal"
+                            (click)="limpiarEstilosCaja()">Cancelar</button>
+                        <button type="submit" class="btn btn-success" [disabled]="contraIncompatibles || initModal"
+                            data-bs-dismiss="modal">Guardar</button>
                     </div>
                 </form>
             </div>

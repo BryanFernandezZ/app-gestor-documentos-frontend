@@ -1,7 +1,8 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { error } from 'jquery';
+import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,21 @@ export class AuthInterceptorService implements HttpInterceptor {
         headers
       })
 
-      return next.handle(reqClone);
+      return next.handle(reqClone).pipe(
+        catchError(this.manejarErrores)
+      );
     }
 
     return next.handle(req);
+  }
+
+  manejarErrores(error: HttpErrorResponse) {
+    if(error.status === 401) {
+      console.log("Token expirado")
+      localStorage.clear();
+      window.location.href="/login";
+    }
+
+    return throwError("Error encontrado");
   }
 }

@@ -22,8 +22,8 @@ export class AgregarDocumentoComponent implements OnInit, AfterViewInit {
     nroDocumento: new FormControl("", [Validators.required, Validators.minLength(18)]), // Validators.maxLength(25)
     remitente: new FormControl("", [Validators.required]),
     direccionProcesal: new FormControl("", [Validators.required]),
-    suministro: new FormControl("", [Validators.required, Validators.pattern(new RegExp("[A-Za-z0-9]{8}"))]),
-    referencia: new FormControl("", [Validators.required, Validators.pattern(new RegExp("[A-Za-z0-9]{13}"))]),
+    suministro: new FormControl("", [Validators.required, Validators.pattern(new RegExp("[0-9]{8}"))]),
+    referencia: new FormControl("", [Validators.required, Validators.pattern(new RegExp("[A-Za-z0-9-]{13}"))]),
     descripcion: new FormControl("", [Validators.required]),
     usuarioAsignado: new FormControl({
       value: `${this.usuarioLogueado.nombre} ${this.usuarioLogueado.apellidos}`,

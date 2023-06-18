@@ -20,6 +20,7 @@ import { ForbiddenComponent } from './vistas/forbidden/forbidden.component';
 import { TableFilterPipe } from './pipes/table-filter.pipe';
 import { TextoCoincidenciaPipe } from './pipes/texto-coincidencia.pipe';
 import { ReporteComponent } from './vistas/reporte/reporte.component';
+import { PrincipalComponent } from './vistas/principal/principal.component';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { ReporteComponent } from './vistas/reporte/reporte.component';
     TableFilterPipe,
     TextoCoincidenciaPipe,
     ReporteComponent,
+    PrincipalComponent,
   ],
   imports: [
     BrowserModule,

@@ -25,6 +25,7 @@ export class ListaDocumentosComponent implements OnInit, AfterViewInit, OnDestro
   documentoSeleccionado: any;
   usuarioLogueado: UsuarioLogueado | undefined;
   supervisor: boolean = false;
+  administrativa: boolean = false;
 
   //TODO: PAGINACION Y FILTRO
   nroPagina: number = 0;
@@ -77,6 +78,7 @@ export class ListaDocumentosComponent implements OnInit, AfterViewInit, OnDestro
     this.documentosMostrar = [];
     this.usuarioLogueado = this.usuarioService.getUsuarioLogueado();
     this.supervisor = this.usuarioLogueado.rol.rol === "Supervisor" ? true : false;
+    this.administrativa = this.usuarioLogueado.area.area === "Administrativa" ? true : false;
 
     this.documentoDerivar = new FormGroup({
       usuarioAsignado: new FormControl("0", [Validators.pattern(new RegExp("[^0]"))])

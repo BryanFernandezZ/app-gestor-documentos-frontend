@@ -12,71 +12,85 @@ import { SesionGuard } from './guards/sesion.guard';
 import { RolGuard } from './guards/rol.guard';
 import { ForbiddenComponent } from './vistas/forbidden/forbidden.component';
 import { ReporteComponent } from './vistas/reporte/reporte.component';
+import { PrincipalComponent } from './vistas/principal/principal.component';
+import { AreaGuard } from './guards/area.guard';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent, title: "Login" },
-
-  {
-    path: "",
-    component: HomeComponent,
-    title: "Home",
-    canActivate: [SesionGuard]
-  },
-  {
-    path: "lista-usuarios",
-    component: ListaUsuariosComponent,
-    title: "Lista de Usuarios",
-    canActivate: [SesionGuard, RolGuard],
-    data: {
-      rol: "supervisor"
-    }
-  },
-  {
-    path: "agregar-usuario",
-    component: AgregarUsuarioComponent,
-    title: "Agregar Usuario",
-    canActivate: [SesionGuard, RolGuard],
-    data: {
-      rol: "supervisor"
-    }
-  },
-  {
-    path: "actualizar-usuario/:codigo",
-    component: ActualizarUsuarioComponent,
-    title: "Actualizar Usuario",
-    canActivate: [SesionGuard, RolGuard],
-    data: {
-      rol: "supervisor"
-    }
-  },
-  {
-    path: "lista-documentos",
-    component: ListaDocumentosComponent,
-    title: "Lista de Documentos",
-    canActivate: [SesionGuard]
-  },
-  {
-    path: "agregar-documento",
-    component: AgregarDocumentoComponent,
-    title: "Agregar Documento",
-    canActivate: [SesionGuard]
-  },
-  {
-    path: "actualizar-documento/:codigo",
-    component: ActualizarDocumentoComponent,
-    title: "Actualizar Documento",
-    canActivate: [SesionGuard]
-  },
-  {
-    path: "reporte",
-    component: ReporteComponent,
-    title: "Reporte",
-    canActivate: [SesionGuard]
-  },
   {
     path: "forbidden",
     component: ForbiddenComponent,
     title: "Sin permisos"
+  },
+  {
+    path: "",
+    component: PrincipalComponent,
+    children: [
+      {
+        path: "",
+        component: HomeComponent,
+        title: "Home",
+        canActivate: [SesionGuard]
+      },
+      {
+        path: "lista-usuarios",
+        component: ListaUsuariosComponent,
+        title: "Lista de Usuarios",
+        canActivate: [SesionGuard, RolGuard],
+        data: {
+          rol: "supervisor"
+        }
+      },
+      {
+        path: "agregar-usuario",
+        component: AgregarUsuarioComponent,
+        title: "Agregar Usuario",
+        canActivate: [SesionGuard, RolGuard],
+        data: {
+          rol: "supervisor"
+        }
+      },
+      {
+        path: "actualizar-usuario/:codigo",
+        component: ActualizarUsuarioComponent,
+        title: "Actualizar Usuario",
+        canActivate: [SesionGuard, RolGuard],
+        data: {
+          rol: "supervisor"
+        }
+      },
+      {
+        path: "lista-documentos",
+        component: ListaDocumentosComponent,
+        title: "Lista de Documentos",
+        canActivate: [SesionGuard]
+      },
+      {
+        path: "agregar-documento",
+        component: AgregarDocumentoComponent,
+        title: "Agregar Documento",
+        canActivate: [SesionGuard, RolGuard, AreaGuard],
+        data: {
+          rol: "supervisor",
+          area: "administrativa"
+        }
+      },
+      {
+        path: "actualizar-documento/:codigo",
+        component: ActualizarDocumentoComponent,
+        title: "Actualizar Documento",
+        canActivate: [SesionGuard, AreaGuard],
+        data: {
+          area: "administrativa"
+        }
+      },
+      {
+        path: "reporte",
+        component: ReporteComponent,
+        title: "Reporte",
+        canActivate: [SesionGuard]
+      },
+    ]
   }
 ];
 

@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   categorias: any[]
   isLoading: boolean = false;
   supervisor: boolean = false;
+  area: boolean = false;
 
   constructor(private categoriaService: CategoriaService,
     private authService: AuthService,
@@ -50,7 +51,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
       error: (err) => console.error(err),
       complete: () => {
         const { rol } = this.usuarioLogueado?.rol;
+        const { area } = this.usuarioLogueado?.area;
         this.supervisor = rol.toString().toLowerCase() === "supervisor" ? true : false;
+        this.area = area.toString().toLowerCase() === "administrativa"? true : false;
         this.usuarioService.setUsuarioLogueado(this.usuarioLogueado!);
       }
     })
