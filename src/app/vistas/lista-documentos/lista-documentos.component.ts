@@ -47,6 +47,8 @@ export class ListaDocumentosComponent implements OnInit, AfterViewInit, OnDestro
 
   archivoAdjunto?: File;
 
+  tableType: number = 2;
+
   acciones = {
     derivar: 1,
     notificar: 2,

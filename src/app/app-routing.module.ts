@@ -69,9 +69,8 @@ const routes: Routes = [
         path: "agregar-documento",
         component: AgregarDocumentoComponent,
         title: "Agregar Documento",
-        canActivate: [SesionGuard, RolGuard, AreaGuard],
+        canActivate: [SesionGuard, AreaGuard],
         data: {
-          rol: "supervisor",
           area: "administrativa"
         }
       },

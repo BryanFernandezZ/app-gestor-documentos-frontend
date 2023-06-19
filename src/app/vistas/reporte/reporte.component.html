@@ -143,6 +143,14 @@
                         </div>
                     </div>
 
+                    <div *ngIf="documentoSeleccionado.notificado" class="col text-center">
+                        <span>Archivo adjunto:</span>
+                        <br>
+                        <img [src]="'data:image/jpeg;base64,' + documentoSeleccionado.archivoAdjunto"
+                            alt="Archivo adjunto del documento" width="120" height="120"
+                            title="Para descargar la imagen, haz click derecho en la misma y selecciona 'Guardar imagen como'">
+                    </div>
+
                 </div>
 
                 <br>

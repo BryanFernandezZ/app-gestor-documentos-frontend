@@ -15,7 +15,7 @@
                 <span>Mostrar</span>
                 <input type="number" class="form-control" [value]="nroElementos" style="width: 70px;"
                     (change)="setNroElementos(nro_elementos.value)" #nro_elementos />
-                <!-- <span>Entradas</span> -->
+
             </div>
             <div class="d-flex align-items-center gap-1">
                 <span>Buscar:</span>
@@ -25,10 +25,9 @@
         </div>
 
         <div class="w-100 table-container">
-            <table class="table table-responsive table-bordered text-capitalize table-striped">
+            <table class="table table-responsive table-bordered text-uppercase table-striped">
                 <thead>
                     <tr class="table-dark">
-                        <!-- <th scope="col" class="text-center">#</th> -->
                         <th scope="col">Documento</th>
                         <th scope="col">Numero</th>
                         <th scope="col">Suministro</th>
@@ -159,6 +158,18 @@
                         <div><b>Nro de Documento</b></div>
                         <div class="d-block">{{documentoSeleccionado.nroDocumento}}</div>
                     </div>
+
+
+                    <div class="mb-3">
+                        <div><b>Remitente</b></div>
+                        <div class="d-block">{{documentoSeleccionado.remitente}}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div><b>Dirección Procesal</b></div>
+                        <div class="d-block">{{documentoSeleccionado.direccionProcesal}}</div>
+                    </div>
+
+
                     <div class="mb-3">
                         <div><b>Usuario Asignado</b></div>
                         <div class="d-block">{{documentoSeleccionado.usuarioAsignado.nombre + ' ' +

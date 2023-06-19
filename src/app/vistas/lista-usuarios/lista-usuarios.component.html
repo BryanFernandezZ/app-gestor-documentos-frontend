@@ -12,20 +12,20 @@
     <div class="d-flex justify-content-between align-items-center my-3">
         <div class="d-flex align-items-center gap-1">
             <span>Mostrar</span>
-            <input type="number" class="form-control" value="10" style="width: 70px;" />
+            <input type="number" class="form-control" [value]="nroElementos" style="width: 70px;"
+                (change)="setNroElementos(nro_elementos.value)" #nro_elementos />
             <span>Entradas</span>
         </div>
         <div class="d-flex align-items-center gap-1">
             <span>Buscar:</span>
-            <input type="text" class="form-control" (keyup)="filtrarUsuarios($event)" />
+            <input type="text" class="form-control" (keyup)="setFiltro(buscar.value)" #buscar />
         </div>
     </div>
 
     <div class="w-100 table-container">
-        <table class="table table-bordered table-striped text-capitalize">
+        <table class="table table-bordered table-striped text-uppercase">
             <thead class="table-dark">
                 <tr>
-                    <!-- <th scope="col" class="text-center">#</th> -->
                     <th scope="col">Nombre</th>
                     <th scope="col">Apellidos</th>
                     <th scope="col">Usuario</th>
@@ -43,11 +43,9 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngFor="let usuario of usuariosMostrar$ | async">
-                    <!-- <th scope="row" class="text-center">{{usuario.codigo}}</th> -->
-                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.nombre">{{usuario.nombre}}</td>
-                    <td class="text-truncate" style="max-width: 80px;" [title]="usuario.apellidos">
-                        {{usuario.apellidos}}</td>
+                <tr *ngFor="let usuario of usuariosMostrar | tableFilter:nroPagina:nroElementos:filtro">
+                    <td [innerHTML]="usuario.nombre | textoCoincidencia:filtro" [title]="usuario.nombre"></td>
+                    <td [innerHTML]="usuario.apellidos | textoCoincidencia:filtro" [title]="usuario.apellidos"></td>
                     <td>{{usuario.usuario}}</td>
                     <td class="text-truncate" style="max-width: 80px;" [title]="usuario.rol.rol">
                         {{usuario.rol.rol}}</td>
@@ -75,21 +73,23 @@
         </table>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center my-3">
-        <span class="d-block">Mostrando {{usuariosMostrar.length}} entradas</span>
+    <div class="d-flex justify-content-between align-items-center pt-3">
+        <span class="d-block">Mostrando {{usuarios.length}} registros</span>
 
-        <nav aria-label="...">
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link">Anterior</a>
+        <nav aria-label="paginacion">
+            <ul class="pagination m-0">
+                <li class="page-item">
+                    <a type="button" class="page-link" (click)="anteriorPagina()"
+                        [ngClass]="{'disabled': anteriorDisabled}">Anterior</a>
                 </li>
 
                 <li class="page-item active" aria-current="page">
-                    <a class="page-link" href="#">1</a>
+                    <a type="button" class="page-link" (click)="verPrimeraPagina()">1</a>
                 </li>
 
                 <li class="page-item">
-                    <a class="page-link" href="#">Siguiente</a>
+                    <a type="button" class="page-link" (click)="siguientePagina()"
+                        [ngClass]="{'disabled': siguienteDisabled}">Siguiente</a>
                 </li>
             </ul>
         </nav>

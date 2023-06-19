@@ -15,6 +15,18 @@ export class ListaUsuariosComponent implements OnInit {
   usuarioSeleccionado: any
   loading = false;
 
+
+  //TODO: PAGINACION Y FILTRO
+  nroPagina: number = 0;
+  nroElementos: number = 5;
+
+  anteriorDisabled: boolean = true;
+  siguienteDisabled: boolean = false;
+
+  filtro: string = "";
+  
+  tableType: number = 1;
+
   constructor(private usuarioService: UsuarioService) {
     this.usuarios = [];
     this.usuariosMostrar = [];
@@ -25,26 +37,54 @@ export class ListaUsuariosComponent implements OnInit {
     this.obtenerUsuarios();
   }
 
+  setNroElementos(nroelementos: string) {
+    const _nroElementos: number = parseInt(nroelementos);
+    this.nroElementos = _nroElementos;
+    this.nroPagina = 0;
+    this.resetTabla();
+  }
+
+  setFiltro(filtro: string) {
+    this.filtro = filtro;
+  }
+
+  anteriorPagina() {
+    this.nroPagina--;
+    if (this.nroPagina > 0) {
+      this.siguienteDisabled = false;
+      this.anteriorDisabled = false;
+    }
+    else this.resetTabla();
+  }
+
+  siguientePagina() {
+    this.anteriorDisabled = false;
+    this.nroPagina++;
+    if ((this.nroPagina * this.nroElementos) + this.nroElementos >= this.usuariosMostrar.length)
+      this.siguienteDisabled = true;
+  }
+
+  verPrimeraPagina() {
+    this.nroPagina = 0;
+    this.resetTabla();
+  }
+
+  resetTabla() {
+    this.anteriorDisabled = true;
+    this.siguienteDisabled = false;
+  }
+
   obtenerUsuarios() {
     this.usuarioService.obtenerUsuarios().subscribe(
       (data) => {
         this.usuarios = data;
         this.usuariosMostrar$.next(this.usuarios);
         this.usuariosMostrar = this.usuarios;
+        console.log(this.usuarios);
       },
       (err) => console.error(err),
       () => this.loading = true
     )
-  }
-
-  filtrarUsuarios(event: any) {
-    const filtro = event.target.value;
-    const usuariosFiltrados = this.usuarios.filter(
-      usuario => usuario.nombre.toLowerCase().includes(filtro.toLowerCase()) || 
-      usuario.apellidos.toLowerCase().includes(filtro.toLowerCase())
-    );
-    this.usuariosMostrar$.next(usuariosFiltrados);
-    this.usuariosMostrar = usuariosFiltrados;
   }
 
   setUsuarioSeleccionado(usuario: any) {
